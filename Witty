@@ -4,6 +4,17 @@
 
 String paquete;
 char paquete2[14];
+int ejex;
+///////////
+const int LDR = A0;
+const int BUTTON = 4;
+const int rojo = 15;
+const int verde = 12;
+const int azul = 13;
+int luz=0;
+int boton=0;
+/////////////
+
 
 //Recibe transmite 
 SoftwareSerial swSer(4, 5, false, 256);
@@ -24,24 +35,109 @@ void setup() {
   //WiFi.mode(WIFI_AP); 
   Udp.begin(localPort);
   Serial.println("Recibiendo de Android:");
+////////
+    pinMode(LDR, INPUT);
+    pinMode(BUTTON, INPUT);
+    pinMode(rojo, OUTPUT);
+    pinMode(verde, OUTPUT);
+    pinMode(azul, OUTPUT);
   }
 
 
 
   void loop() {
-
+    //azul
+      azul1();
+    
+//RECIBE SERIE
       if (swSer.available()) {
         for (int i=0; i<10; i++) {
        buffer[i] = swSer.read();
-       //FIX errors
-       delay(10);
+  delay(10);
         }
-       Serial.println(buffer);
+      // Serial.println(buffer);
+         if(buffer[0]=='W'){
+        //TRAMA ENVIADA EN ORDEN CORRECTO
+       Serial.println("WITTYMANDA");
+       }
     }
     
-delay(50);
+delay(5);
+//ENVIA SERIE verde
+  swSer.write("0000ARDUINO00");
+              verde1();
+   delay(10);
+////////
+//RECIBE ANDROID
+ int packetSize = Udp.parsePacket();
+  
+  if(packetSize)
+  {
 
-  swSer.write("0000000000000");
-  delay(100);
+        Serial.print("Tamanyo del paquete :");
+        Serial.println(packetSize);
+        
+    //For que saca la IP DEL ANDROID
+    Serial.print("IP del cliente : ");
+    IPAddress remote = Udp.remoteIP();
+    for (int i =0; i < 4; i++)
+    {
+      Serial.print(remote[i], DEC);
+      if (i < 3)
+      {
+        Serial.print(".");
+      }
+    }
     
+    Serial.print(",Puerto: ");
+    Serial.println(Udp.remotePort());
+
+    // lee un paque de packetBufffer
+    Udp.read(packetBuffer,UDP_TX_PACKET_MAX_SIZE);
+    Serial.println("Contenido:");
+    Serial.println(packetBuffer);
+      Serial.println("Cortado:");
+      paquete=packetBuffer;
+      paquete=paquete.substring(0,3);
+      ejex=paquete.toInt();
+    Serial.println(ejex);
+
+ 
+if ((String)packetBuffer=="SET1")
+{
+Serial.println("Dato comprobado.");
 }
+
+
+///////////////
+    swSer.write(packetBuffer);
+    delay(100);
+    /////////
+    
+//Borra BUFFER
+   for(int i=0;i<UDP_TX_PACKET_MAX_SIZE;i++) packetBuffer[i] = 0;
+
+//ENVIA ANDROID
+ //   ENVIO DE PAQUETES:
+    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+    
+    Udp.write(ReplyBuffer);
+ //  Udp.write(packetBuffer);
+    Udp.endPacket();
+
+
+}
+  delay(10);
+
+}
+
+void azul1(){
+       analogWrite(azul,1023);
+       analogWrite(verde,0);
+       analogWrite(rojo,0);
+  }
+  void verde1(){
+       analogWrite(azul,0);
+       analogWrite(verde,1023);
+       analogWrite(rojo,0);
+  }
