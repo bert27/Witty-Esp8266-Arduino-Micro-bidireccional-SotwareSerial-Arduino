@@ -1,7 +1,10 @@
 #include <SoftwareSerial.h>
+//RECIBE ENVIA. ESP ES EL 6 AL 10 DEL MICRO PRO O EL 0 EN EL UNO.
+//ESP ENVIA LA SEÑAL DEL ANDROID Y ARDUINO LA RECIBE PARA GESTIONARLA.
 SoftwareSerial mySerial(8, 9); // RX, TX
 //8 al 5 del witty y 9 al 4.
-
+char trozo[4]="";
+String palabra;
 
 char buffer[10];
 
@@ -21,19 +24,30 @@ void setup() {
 
 void loop() { // run over and over
 
- mySerial.write("0000000000000");
- delay(100);
+ mySerial.write("0000WITTY0000");
+ delay(10);
  
    if (mySerial.available()) {
+      memset(buffer, 0,sizeof(buffer));
         for (int i=0; i<10; i++) {
        buffer[i] = mySerial.read();
   delay(10);
+
+  trozo[0]=buffer[0];
+  trozo[1]=buffer[1];
+  trozo[2]=buffer[2];
+  palabra=trozo;
               }
      
-       Serial.println(buffer);
+   //    Serial.println(buffer);
+       if(buffer[0]=='A'){
+        //TRAMA ENVIADA EN ORDEN CORRECTO
+        palabra="ARDUINERO";
+       Serial.println(palabra);
+       }
     }
     
-delay(50);
+delay(5);
  
  
  
