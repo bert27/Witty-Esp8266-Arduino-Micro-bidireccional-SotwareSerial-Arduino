@@ -11,12 +11,7 @@ char buffer[10];
 void setup() {
   // Open serial communications and wait for port to open:
   Serial.begin(115200);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
-
   Serial.println("FURBY");
-
   // set the data rate for the SoftwareSerial port
   mySerial.begin(9600);
  // mySerial.println("Hello, world?");
@@ -31,16 +26,14 @@ void loop() { // run over and over
       memset(buffer, 0,sizeof(buffer));
         for (int i=0; i<10; i++) {
        buffer[i] = mySerial.read();
-  delay(10);
+       delay(10);
 
   trozo[0]=buffer[0];
   trozo[1]=buffer[1];
   trozo[2]=buffer[2];
   palabra=trozo;
               }
-     
-   //    Serial.println(buffer);
-       if(buffer[0]=='A'){
+    
         //TRAMA ENVIADA EN ORDEN CORRECTO
         palabra="ARDUINERO";
        Serial.println(palabra);
