@@ -1,0 +1,47 @@
+#include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
+#include <SoftwareSerial.h>
+
+String paquete;
+char paquete2[14];
+int ejex;
+
+//Recibe transmite 
+SoftwareSerial swSer(4, 5, false, 256);
+
+char buffer[10];
+WiFiUDP Udp;
+char packetBuffer[UDP_TX_PACKET_MAX_SIZE];
+char  ReplyBuffer[] = "FURBY";  
+
+unsigned int localPort = 8888;
+const char *ssid = "INVENTO";  
+const char *password = "0123456789";
+
+void setup() {
+  Serial.begin(115200);
+  swSer.begin(9600);
+  WiFi.softAP(ssid, password);
+  //WiFi.mode(WIFI_AP); 
+  Udp.begin(localPort);
+  Serial.println("Recibiendo de Android:");
+  }
+
+
+
+  void loop() {
+
+      if (swSer.available()) {
+        for (int i=0; i<10; i++) {
+       buffer[i] = swSer.read();
+  delay(10);
+        }
+       Serial.println(buffer);
+    }
+    
+delay(50);
+
+  swSer.write("0000000000000");
+   delay(100);
+    
+}
