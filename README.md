@@ -8,3 +8,7 @@ Arduino with wifi.
 
 Led witty blue by default.
 Led witty green when send message.
+
+Scrolling frames are sent in the buffer.
+Checking by letter and orders the message.
+set speed
