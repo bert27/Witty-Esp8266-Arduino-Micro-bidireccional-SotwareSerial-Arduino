@@ -12,3 +12,7 @@ Led witty green when send message.
 Scrolling frames are sent in the buffer.
 Checking by letter and orders the message.
 Set speed
+
+Connect wifi the smarphone :
+Name Invento
+Password 0123456789
